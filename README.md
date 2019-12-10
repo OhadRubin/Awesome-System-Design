@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/OhadRubin/Awesome-System-Design.svg?branch=master)](https://travis-ci.org/OhadRubin/Awesome-System-Design)
-![coverage](https://codecov.io/gh/OhadRubin/awesome-system-design/branch/master/graph/badge.svg)
-
+[![codecov](https://codecov.io/gh/OhadRubin/Awesome-System-Design/branch/master/graph/badge.svg)](https://codecov.io/gh/OhadRubin/Awesome-System-Design)
 # Awesome System Design
 
 An example package. See [full documentation](https://advanced-system-design-awesome-system-design.readthedocs.io/en/latest/).
