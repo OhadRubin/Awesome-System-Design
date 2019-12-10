@@ -1,7 +1,7 @@
 ![build status](https://travis-ci.org/OhadRubin/awesome-system-design.svg?branch=master)
 ![coverage](https://codecov.io/gh/OhadRubin/awesome-system-design/branch/master/graph/badge.svg)
 
-# Foobar
+# Awesome System Design
 
 An example package. See [full documentation](https://advanced-system-design-awesome-system-design.readthedocs.io/en/latest/).
 
