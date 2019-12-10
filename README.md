@@ -1,4 +1,4 @@
-![build status](https://travis-ci.org/OhadRubin/awesome-system-design.svg?branch=master)
+[![Build Status](https://travis-ci.org/OhadRubin/Awesome-System-Design.svg?branch=master)](https://travis-ci.org/OhadRubin/Awesome-System-Design)
 ![coverage](https://codecov.io/gh/OhadRubin/awesome-system-design/branch/master/graph/badge.svg)
 
 # Awesome System Design
