@@ -26,6 +26,14 @@ class Connection:
             if len(packet)==size:
                 break
         return packet
+    def receive_all(self):
+        packet=b''
+        while True:
+            buffer = self.socket.recv(512)
+            if not buffer:
+                return packet
+            packet  += buffer
+        
     def close(self):
         self.socket.close()
         

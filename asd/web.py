@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from functools import wraps
 from http.server import *
@@ -41,7 +40,7 @@ _USER_HTML = """<html>
 </html>"""
 
 _THOUGHT_LINE_HTML = """<tr><td>{timestamp}</td><td>{thought_data}</td></tr>"""
-
+# def sanitize_timestamp()
 @website.route('/users/([0-9]+)')
 def write_user(user_id):
     user_dir = Path(website.data_dir) / user_id

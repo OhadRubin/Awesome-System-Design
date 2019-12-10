@@ -23,5 +23,6 @@ class Listener:
     
     def __enter__(self):
         self.start()
+        return self.accept()
     def __exit__(self, exception, error, traceback):
         self.stop()
