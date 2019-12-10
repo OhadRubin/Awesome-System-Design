@@ -1,18 +1,18 @@
-![build status](https://travis-ci.org/dan-gittik/foobar.svg?branch=master)
-![coverage](https://codecov.io/gh/dan-gittik/foobar/branch/master/graph/badge.svg)
+![build status](https://travis-ci.org/OhadRubin/awesome-system-design.svg?branch=master)
+![coverage](https://codecov.io/gh/OhadRubin/awesome-system-design/branch/master/graph/badge.svg)
 
 # Foobar
 
-An example package. See [full documentation](https://advanced-system-design-foobar.readthedocs.io/en/latest/).
+An example package. See [full documentation](https://advanced-system-design-awesome-system-design.readthedocs.io/en/latest/).
 
 ## Installation
 
 1. Clone the repository and enter it:
 
     ```sh
-    $ git clone git@github.com:dan-gittik/foobar.git
+    $ git clone git@github.com:OhadRubin/awesome-system-design.git
     ...
-    $ cd foobar/
+    $ cd awesome-system-design/
     ```
 
 2. Run the installation script and activate the virtual environment:
@@ -21,7 +21,7 @@ An example package. See [full documentation](https://advanced-system-design-foob
     $ ./scripts/install.sh
     ...
     $ source .env/bin/activate
-    [foobar] $ # you're good to go!
+    [awesome-system-design] $ # you're good to go!
     ```
 
 3. To check that everything is working as expected, run the tests:
@@ -34,7 +34,7 @@ An example package. See [full documentation](https://advanced-system-design-foob
 
 ## Usage
 
-The `foobar` packages provides the following classes:
+The `asd` packages provides the following classes:
 
 - `Foo`
 
@@ -44,7 +44,7 @@ The `foobar` packages provides the following classes:
     `add` method to sum them.
 
     ```pycon
-    >>> from foobar import Foo
+    >>> from asd import Foo
     >>> foo = Foo()
     >>> foo.run()
     'foo'
@@ -60,17 +60,17 @@ The `foobar` packages provides the following classes:
     except it returns `"bar"` when run.
 
     ```pycon
-    >>> from foobar import Bar
+    >>> from asd import Bar
     >>> bar = Bar()
     >>> bar.run()
     'bar'
     ```
 
-The `foobar` package also provides a command-line interface:
+The `asd` package also provides a command-line interface:
 
 ```sh
-$ python -m foobar
-foobar, version 0.1.0
+$ python -m asd
+asd, version 0.1.0
 ```
 
 All commands accept the `-q` or `--quiet` flag to suppress output, and the `-t`
@@ -82,11 +82,11 @@ The CLI provides the `foo` command, with the `run`, `add` and `inc`
 subcommands:
 
 ```sh
-$ python -m foobar foo run
+$ python -m asd foo run
 foo
-$ python -m foobar foo inc 1
+$ python -m asd foo inc 1
 2
-$ python -m foobar foo add 1 2
+$ python -m asd foo add 1 2
 3
 ```
 
@@ -98,33 +98,33 @@ option to write its output to a file rather than the standard output, and the
 `-u` or `--uppercase` option to do so in uppercase letters.
 
 ```sh
-$ python -m foobar bar run
+$ python -m asd bar run
 bar
-$ python -m foobar bar run -u
+$ python -m asd bar run -u
 BAR
-$ python -m foobar bar run -o output.txt
+$ python -m asd bar run -o output.txt
 $ cat output.txt
 BAR
 ```
 
 Do note that each command's options should be passed to *that* command, so for
-example the `-q` and `-t` options should be passed to `foobar`, not `foo` or
+example the `-q` and `-t` options should be passed to `asd`, not `foo` or
 `bar`.
 
 ```sh
-$ python -m foobar bar run -q # this doesn't work
+$ python -m asd bar run -q # this doesn't work
 ERROR: no such option: -q
-$ python -m foobar -q bar run # this does work
+$ python -m asd -q bar run # this does work
 ```
 
 To showcase these options, consider `bar`'s `error` subcommand, which raises an
 exception:
 
 ```sh
-$ python -m foobar bar error
+$ python -m asd bar error
 ERROR: something went terribly wrong :[
-$ python -m foobar -q bar error # suppress output
-$ python -m foobar -t bar error # show full traceback
+$ python -m asd -q bar error # suppress output
+$ python -m asd -t bar error # show full traceback
 ERROR: something went terribly wrong :[
 Traceback (most recent call last):
     ...
