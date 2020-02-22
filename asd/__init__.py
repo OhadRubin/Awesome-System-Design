@@ -3,10 +3,9 @@
 
 # from .asd_pb2 import *
 
-# from . import reader
+from . import reader
 # from . import asd_pb2
 
 from . import mq
 from . import parsers
 
-# version = '0.1.0'

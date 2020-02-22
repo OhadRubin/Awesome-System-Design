@@ -1,30 +1,10 @@
-from . import asd_pb2
+# from . import asd_pb2
 import click
-from asd.parsers import parser_list
+
+from asd.parsers import run_parser
 import os
 from asd import mq
 
-class Context:
-    def __init__(self, user_id, timestamp):
-        self.user_id = user_id
-        self.timestamp = timestamp
-
-    def path(self, filename):
-        return f"data/{self.user_id}/{self.timestamp}/{filename}"
-
-    def save(self, filename, data):
-        filename = self.path(filename)
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        with open(filename, "w") as f:
-            f.write(data)
-
-
-def run_parser(parser_name, packet):
-    parse_method = parser_list[parser_name]
-    packet = asd_pb2.Packet(packet)
-    context = Context(user_id=packet.user.user_id, timestamp=packet.snapshot.datetime)
-    res = parse_method(context=context, snapshot=packet.snapshot)
-    return res
 
 
 @click.group()
@@ -50,8 +30,8 @@ def parse(parser_name, path):
 @click.argument('parser_name')
 @click.argument('url')
 def run_parser_mq(parser_name, url):
-    def parse_f(s):
-        return run_parser(parser_name, packet=s)
+    def parse_f(channel, method, propreties, body):
+        return run_parser(parser_name, packet=body)
     channel, queue_name = mq.connect2exchange(addr=url)
     channel.basic_consume(
         queue=queue_name, on_message_callback=parse_f, auto_ack=True)

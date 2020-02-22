@@ -28,8 +28,10 @@ log = Log()
 @click.option('-q', '--quiet', is_flag=True)
 @click.option('-t', '--traceback', is_flag=True)
 def main(quiet=False, traceback=False):
-    log.quiet = quiet
-    log.traceback = traceback
+    pass
+    # log.quiet = quiet
+    # log.traceback = traceback
+
 
 @main.command('run-server')
 @click.option('-h', '--host', default='127.0.0.1')
@@ -62,6 +64,7 @@ def run_server(host, port, url):
 
     api.add_resource(Config, '/config')
     app.run(host=host, port=port, debug=True)
+
 
 if __name__ == '__main__':
     main(prog_name='asd')
