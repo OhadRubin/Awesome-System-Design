@@ -1,7 +1,6 @@
 from .asd_pb2 import *
 import gzip
 import struct
-import sh
 
 
 class Reader:

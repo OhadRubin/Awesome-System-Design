@@ -7,5 +7,6 @@ def parse_depth_image(context, snapshot):
                                                               snapshot.depth_image.width])
     ax = sns.heatmap(data)
     ax.get_figure().savefig(path)
+    return ax
 
 parse_depth_image.field = "depth_image"

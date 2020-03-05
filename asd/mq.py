@@ -1,6 +1,7 @@
 import pika
 
 def connect2exchange(addr='localhost', exchange_name='packet'):
+    # print("hi")
     connection = pika.BlockingConnection(pika.ConnectionParameters(addr))
     channel = connection.channel()
     result = channel.queue_declare(queue='', exclusive=True)

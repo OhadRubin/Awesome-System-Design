@@ -1,7 +1,7 @@
 # from . import asd_pb2
 import click
 
-from asd.parsers import run_parser
+from asd.parsers import run_parser, parse
 import os
 from asd import mq
 
@@ -20,22 +20,27 @@ def main(quiet=False, traceback=False):
 @main.command('parse')
 @click.argument('parser_name')
 @click.argument('path')
-def parse(parser_name, path):
-    assert isinstance(path, str) and path.endswith(".raw")
-    with open(path) as f:
-        print(run_parser(parser_name, packet=f.read()))
+def parse_cli(parser_name, path):
+    print(parse(parser_name, path))
 
 
 @main.command('run-parser')
 @click.argument('parser_name')
 @click.argument('url')
 def run_parser_mq(parser_name, url):
+    out_channel, _ = mq.connect2exchange(addr=url, exchange_name="worker")
+    in_channel, queue_name = mq.connect2exchange(addr=url, exchange_name='packet')
+
     def parse_f(channel, method, propreties, body):
-        return run_parser(parser_name, packet=body)
-    channel, queue_name = mq.connect2exchange(addr=url)
-    channel.basic_consume(
+        res = run_parser(parser_name, packet=body)
+        out_channel.basic_publish(exchange="worker", routing_key='', body=res)
+        # print(res)
+        #TODO add log with: print(res)
+        return res
+
+    in_channel.basic_consume(
         queue=queue_name, on_message_callback=parse_f, auto_ack=True)
-    channel.start_consuming()
+    in_channel.start_consuming()
 
 if __name__ == '__main__':
     main(prog_name='asd')

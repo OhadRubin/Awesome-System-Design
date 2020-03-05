@@ -11,7 +11,9 @@ def parse_pose(context, snapshot):
                         z=snapshot.pose.rotation.z,
                         w=snapshot.pose.rotation.w)
                 )
-    context.save('pose.json', json.dumps(pose_obj))
+    res = json.dumps(pose_obj)
+    context.save('pose.json', res)
+    return res
 
 parse_pose.field = "pose"
 

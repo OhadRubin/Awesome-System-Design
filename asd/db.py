@@ -1,0 +1,99 @@
+from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func, Float
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import click
+import sh
+from sqlalchemy.schema import CreateTable
+
+Base = declarative_base()
+
+
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key=True)
+    username = Column(String)
+    birthday = Column(String)
+    gender = Column(String)
+
+
+# snapshot_id = the concat of userid_timestamp
+class Snapshot(Base):
+    __tablename__ = 'snapshot'
+    snapshot_id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship("User")
+    parser_name = Column(String)
+    parser_id = Column(Integer)
+
+
+class Pose(Base):
+    __tablename__ = 'pose'
+    id = Column(Integer, primary_key=True)
+    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'))
+    snapshot = relationship("Snapshot")
+
+    t_x = Column(Float)
+    t_y = Column(Float)
+    t_z = Column(Float)
+    r_x = Column(Float)
+    r_y = Column(Float)
+    r_z = Column(Float)
+    r_w = Column(Float)
+
+
+class DepthImage(Base):
+    __tablename__ = 'depth_image'
+    id = Column(Integer, primary_key=True)
+    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'))
+    snapshot = relationship("Snapshot")
+    path = Column(String)
+    width = Column(Integer)
+    height = Column(Integer)
+
+
+class ColorImage(Base):
+    __tablename__ = 'color_image'
+    id = Column(Integer, primary_key=True)
+    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'))
+    snapshot = relationship("Snapshot")
+    path = Column(String)
+    width = Column(Integer)
+    height = Column(Integer)
+
+
+class Feelings(Base):
+    __tablename__ = 'feelings'
+    id = Column(Integer, primary_key=True)
+    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'))
+    snapshot = relationship("Snapshot")
+    hunger = Column(Float)
+    thirst = Column(Float)
+    exhaustion = Column(Float)
+    happiness = Column(Float)
+
+
+@click.group()
+@click.option('-q', '--quiet', is_flag=True)
+@click.option('-t', '--traceback', is_flag=True)
+def main(quiet=False, traceback=False):
+    pass
+
+
+@main.command('create-db')
+def create_db():
+    engine = create_engine('sqlite:///asd_db.sqlite')
+    session = sessionmaker()
+    session.configure(bind=engine)
+    Base.metadata.create_all(engine)
+
+
+@main.command('delete-db')
+def delete_db():
+    sh.rm('asd_db.sqlite')
+
+
+if __name__ == '__main__':
+    main(prog_name='asd')

@@ -52,3 +52,11 @@ def run_parser(parser_name, packet):
     context = Context(user_id=packet.user.user_id, timestamp=packet.snapshot.datetime)
     res = parse_method(context=context, snapshot=packet.snapshot)
     return res
+
+def parse(parser_name, path):
+    assert isinstance(path, str) and path.endswith(".raw")
+    with open(path, "rb") as x:
+        return run_parser(parser_name, packet=x.read())
+
+
+

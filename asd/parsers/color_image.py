@@ -9,3 +9,4 @@ class ColorImageParser:
         data = snapshot.color_image.data
         image = PIL.frombytes(data=data, mode='RGB', size=size)
         image.save(path)
+        return path
