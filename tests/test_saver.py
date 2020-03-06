@@ -34,3 +34,4 @@
 # #
 #
 #
+# python -m asd.saver save sqlite:///asd_db.sqlite pose asd/pose2.result
