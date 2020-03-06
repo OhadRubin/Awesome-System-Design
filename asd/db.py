@@ -12,7 +12,7 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, primary_key=True)
     username = Column(String)
     birthday = Column(String)
     gender = Column(String)
@@ -21,9 +21,10 @@ class User(Base):
 # snapshot_id = the concat of userid_timestamp
 class Snapshot(Base):
     __tablename__ = 'snapshot'
-    snapshot_id = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    element_id = Column(Integer, primary_key=True)
+    snapshot_id = Column(String)
+    timestamp = Column(Integer)
+    user_id = Column(Integer, ForeignKey('user.user_id'))
     user = relationship("User")
     parser_name = Column(String)
     parser_id = Column(Integer)
@@ -31,8 +32,7 @@ class Snapshot(Base):
 
 class Pose(Base):
     __tablename__ = 'pose'
-    id = Column(Integer, primary_key=True)
-    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'))
+    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'), primary_key=True)
     snapshot = relationship("Snapshot")
 
     t_x = Column(Float)
@@ -46,9 +46,9 @@ class Pose(Base):
 
 class DepthImage(Base):
     __tablename__ = 'depth_image'
-    id = Column(Integer, primary_key=True)
-    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'))
+    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'), primary_key=True)
     snapshot = relationship("Snapshot")
+
     path = Column(String)
     width = Column(Integer)
     height = Column(Integer)
@@ -56,9 +56,9 @@ class DepthImage(Base):
 
 class ColorImage(Base):
     __tablename__ = 'color_image'
-    id = Column(Integer, primary_key=True)
-    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'))
+    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'), primary_key=True)
     snapshot = relationship("Snapshot")
+
     path = Column(String)
     width = Column(Integer)
     height = Column(Integer)
@@ -66,9 +66,9 @@ class ColorImage(Base):
 
 class Feelings(Base):
     __tablename__ = 'feelings'
-    id = Column(Integer, primary_key=True)
-    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'))
+    snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'), primary_key=True)
     snapshot = relationship("Snapshot")
+
     hunger = Column(Float)
     thirst = Column(Float)
     exhaustion = Column(Float)

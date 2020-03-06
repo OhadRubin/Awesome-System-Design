@@ -40,12 +40,13 @@ def upload_sample(path, host, port):
 
     for i, snapshot in enumerate(reader):
         resp_result = requests.get(f'{addr}/config', data=user_fields).json()
-
-        available_parsers = resp_result['parsers']
+        # TODO: check which parsers are online in server
+        available_parsers = resp_result['parsers'] + ["datetime"]
         snapshot_fields = {"color_image": snapshot.color_image,
                            "pose": snapshot.pose,
                            "depth_image": snapshot.depth_image,
-                           "feelings": snapshot.feelings}
+                           "feelings": snapshot.feelings,
+                           "datetime": snapshot.datetime}
 
         snapshot = asd_pb2.Snapshot(**{parser_name: snapshot_fields[parser_name]
                                        for parser_name in available_parsers})
@@ -53,6 +54,8 @@ def upload_sample(path, host, port):
         resp = requests.post(f'{addr}/config', data=packet,
                              headers={'Content-Type': 'application/protobuf',
                                       'Content-Length': str(len(packet))})
+        if i==10:
+            break
 
 @main.command('upload-sample')
 @click.option('-h', '--host', default='127.0.0.1')

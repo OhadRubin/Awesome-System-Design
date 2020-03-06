@@ -16,7 +16,7 @@ def test_server():
     server.terminate()
 
 # def test_run_server_cmd():
-#     """docker run -d -p 5672:5672 rabbitmq"""
+#     """sudo docker run -d -p 5672:5672 rabbitmq"""
 #     cmd = """python -m asd.server run-server -h '127.0.0.1' -p 8000 'rabbitmq://127.0.0.1:5672/'"""
 #     cmd = """python -m asd.server run-server -h '127.0.0.1' -p 8000 127.0.0.1"""
 

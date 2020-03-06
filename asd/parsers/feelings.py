@@ -8,6 +8,6 @@ def parse_feelings(context, snapshot):
                         )
     res = json.dumps(feelings_obj)
     context.save('feelings.json', res)
-    return  res
+    return feelings_obj
 
 parse_feelings.field = "feelings"

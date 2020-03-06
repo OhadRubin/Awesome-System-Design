@@ -1,0 +1,1 @@
+{"parser_name": "feelings", "data": {"user": {"username": "Dan Gittik", "user_id": 42, "gender": 0, "birthday": 699746400}, "timestamp": 1575446887339, "result": {"hunger": 0.0, "thirst": 0.0, "exhaustion": 0.0, "happiness": 0.0}}}
