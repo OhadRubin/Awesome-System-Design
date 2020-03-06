@@ -44,8 +44,8 @@ def main(quiet=False, traceback=False):
 @click.argument('database_url', default='sqlite:///asd_db.sqlite')
 def run_saver_cli(pika_url, database_url):
     channel, queue_name = mq.connect2exchange(addr=pika_url, exchange_name='worker')
-
     saver = Saver(database_url=database_url)
+
     def handle_msg(channel, method, propreties, body):
         body = json.loads(body)
         saver.save(parser_name=body['parser_name'], data=body['data'])
