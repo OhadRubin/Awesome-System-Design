@@ -11,8 +11,9 @@ def test_server():
 
     server = multiprocessing.Process(target=run_server, kwargs=dict(host='127.0.01', port=8000, publish=print_message))
     server.start()
+    time.sleep(2)
     upload_sample(host='127.0.0.1', port=8000, path='asd/tiny.mind.gz')
-    time.sleep(0.03)
+
     server.terminate()
 
 # def test_run_server_cmd():
