@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import click
 from asd.db import *
-from asd.db import User, Base, Snapshot, ColorImage, DepthImage, Pose, Feelings
+from asd.db import User, Base, Snapshot, ColorImage, DepthImage, Pose, Feelings, create_db
 from asd import mq
 import json
 from datetime import datetime
@@ -21,11 +21,17 @@ class Saver:
         user = self.session.query(User).filter(User.user_id == data['user']['user_id']).first()
         if not user:
             user = User(**data['user'])
-
-        snapshot = Snapshot(snapshot_id=f"{data['user']['user_id']}_{str(data['timestamp'])}",
+        snapshot_id = f"{data['user']['user_id']}_{str(data['timestamp'])}"
+        snapshot = Snapshot(snapshot_id=snapshot_id,
                             timestamp=data['timestamp'],
                             parser_name=parser_name, user=user)
-        row = self.mapping[parser_name](snapshot=snapshot, **data['result'])
+        row_obj = self.mapping[parser_name]
+        row = self.session.query(row_obj).filter(row_obj.snapshot_id == snapshot_id).first()
+        if row:
+            return
+
+
+        row = row_obj(snapshot=snapshot, **data['result'])
 
         self.session.add(snapshot)
         self.session.add(row)
@@ -39,10 +45,13 @@ class Saver:
 def main(quiet=False, traceback=False):
     pass
 
+import time
 @main.command('run-saver')
 @click.argument('pika_url')
 @click.argument('database_url', default='sqlite:///asd_db.sqlite')
 def run_saver_cli(pika_url, database_url):
+    create_db(database_url)
+    time.sleep(10)
     channel, queue_name = mq.connect2exchange(addr=pika_url, exchange_name='worker')
     saver = Saver(database_url=database_url)
 

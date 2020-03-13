@@ -8,8 +8,8 @@ function main {
     python -m virtualenv .env --prompt "[asd] "
     find .env -name site-packages -exec bash -c 'echo "../../../../" > {}/self.pth' \;
     .env/bin/pip install -U pip
-    .env/bin/pip install -r requirements.txt
-    python  -m asd.db create-db
+#    .env/bin/pip install -r requirements.txt
+#    python  -m asd.db create-db
 }
 
 

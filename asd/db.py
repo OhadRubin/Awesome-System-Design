@@ -81,14 +81,16 @@ class Feelings(Base):
 def main(quiet=False, traceback=False):
     pass
 
-
-@main.command('create-db')
-def create_db():
-    engine = create_engine('sqlite:///asd_db.sqlite')
+def create_db(address):
+    engine = create_engine(address)
     session = sessionmaker()
     session.configure(bind=engine)
     Base.metadata.create_all(engine)
 
+@main.command('create-db')
+@click.option('-a', '--address', default='sqlite:///asd_db.sqlite')
+def create_db_cli(address):
+    create_db(address)
 
 @main.command('delete-db')
 def delete_db():

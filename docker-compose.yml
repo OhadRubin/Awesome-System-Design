@@ -1,0 +1,73 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - "15672:15672"
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+#    command: python -m asd.server run-server -h '127.0.0.1' -p 8000 rabbitmq
+    command: python -m asd.server run-server -h '0.0.0.0' -p 8000 rabbitmq
+    ports:
+    - "8000:8000"
+    links:
+      - "rabbitmq"
+    depends_on:
+      - "rabbitmq"
+    volumes:
+      - ./data:/data
+  saver:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: python -m asd.saver run-saver rabbitmq
+    links:
+      - "rabbitmq"
+    volumes:
+      - ./data:/data
+  pose:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: python -m asd.parsers run-parser 'pose' rabbitmq
+    links:
+      - "rabbitmq"
+    depends_on:
+      - "rabbitmq"
+    volumes:
+      - ./data:/data
+  feelings:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: python -m asd.parsers run-parser 'feelings' rabbitmq
+    links:
+      - "rabbitmq"
+    depends_on:
+      - "rabbitmq"
+    volumes:
+      - ./data:/data
+  color_image:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: python -m asd.parsers run-parser 'color_image' rabbitmq
+    links:
+      - "rabbitmq"
+    depends_on:
+      - "rabbitmq"
+    volumes:
+      - ./data:/data
+  depth_image:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: python -m asd.parsers run-parser 'depth_image' rabbitmq
+    links:
+      - "rabbitmq"
+    depends_on:
+      - "rabbitmq"
+    volumes:
+      - ./data:/data

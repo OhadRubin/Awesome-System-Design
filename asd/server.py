@@ -58,6 +58,10 @@ def run_server(host, port, publish):
     api.add_resource(Config, '/config')
     app.run(host=host, port=port)
 
+import time
+
+# print("Printed immediately.")
+
 
 @main.command('run-server')
 @click.option('-h', '--host', default='127.0.0.1')
@@ -65,6 +69,7 @@ def run_server(host, port, publish):
 @click.argument('url', default="127.0.0.1")
 # @click.argument('url', default="rabbitmq://127.0.0.1:5672")
 def run_server_cli(host, port, url):
+    time.sleep(10)
     channel, _ = mq.connect2exchange(addr=url)
     # print("hi")
     def publish2exchange(packet):
