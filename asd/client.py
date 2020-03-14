@@ -54,8 +54,8 @@ def upload_sample(path, host, port):
         resp = requests.post(f'{addr}/config', data=packet,
                              headers={'Content-Type': 'application/protobuf',
                                       'Content-Length': str(len(packet))})
-        # if i==10:
-        #     break
+        if i==10:
+            break
 
 @main.command('upload-sample')
 @click.option('-h', '--host', default='127.0.0.1')

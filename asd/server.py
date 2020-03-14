@@ -69,7 +69,7 @@ import time
 @click.argument('url', default="127.0.0.1")
 # @click.argument('url', default="rabbitmq://127.0.0.1:5672")
 def run_server_cli(host, port, url):
-    time.sleep(10)
+    # time.sleep(10)
     channel, _ = mq.connect2exchange(addr=url)
     # print("hi")
     def publish2exchange(packet):

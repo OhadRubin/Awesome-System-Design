@@ -58,7 +58,6 @@ class ColorImage(Base):
     __tablename__ = 'color_image'
     snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'), primary_key=True)
     snapshot = relationship("Snapshot")
-
     path = Column(String)
     width = Column(Integer)
     height = Column(Integer)
@@ -88,13 +87,13 @@ def create_db(address):
     Base.metadata.create_all(engine)
 
 @main.command('create-db')
-@click.option('-a', '--address', default='sqlite:///asd_db.sqlite')
+@click.option('-a', '--address', default='postgresql://admin:admin@localhost:5432/asd.db')
 def create_db_cli(address):
     create_db(address)
 
-@main.command('delete-db')
-def delete_db():
-    sh.rm('asd_db.sqlite')
+# @main.command('delete-db')
+# def delete_db():
+#     sh.rm('asd_db.sqlite')
 
 
 if __name__ == '__main__':

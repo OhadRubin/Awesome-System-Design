@@ -2,7 +2,20 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_restful import fields, marshal_with, reqparse, Resource
 import click
-
+from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func, Float
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import click
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import click
+from asd.db import *
+from asd.db import User, Base, Snapshot, ColorImage, DepthImage, Pose, Feelings, create_db
+from asd import mq
+import json
+from datetime import datetime
 
 @click.group()
 # @click.version_option(asd.version)
@@ -14,20 +27,26 @@ def main(quiet=False, traceback=False):
     # log.traceback = traceback
 
 
-def run_server(host, port):
+def run_server(host, port, database_url):
+    engine = create_engine(database_url)
+    Base.metadata.bind = engine
+
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+
     app = Flask(__name__)
     api = Api(app)
 
     class GetUsers(Resource):
 
         def get(self):
-            return {'res': 'inside GetUsers'}
+            return {'res': session.query(User).all()}
 
     api.add_resource(GetUsers, '/users')
 
     class GetUserDetails(Resource):
         def get(self, user_id):
-            return {'res': f'inside GetUserDetails, for {user_id}'}
+            return {'res': session.query(User).filter(User.user_id == int(user_id)).all()}
 
     api.add_resource(GetUserDetails, '/users/<user_id>')
 
@@ -51,14 +70,17 @@ def run_server(host, port):
     api.add_resource(GetParserResult, '/users/<user_id>/snapshots/<snapshot_id>/<result_name>')
 
     app.run(host=host, port=port)
-
+import time
 
 @main.command('run-server')
 @click.option('-h', '--host', default='127.0.0.1')
 @click.option('-p', '--port', default="5000")
-# @click.argument('url', default="127.0.0.1")
-def run_server_cli(host, port):
-    run_server(host, port)
+@click.option('-d', '--database', default='sqlite:///asd_db.sqlite')
+def run_server_cli(host, port, database):
+    # time.sleep(30)
+    # create_db(database)
+    print("api ready")
+    run_server(host, port, database_url=database)
 
 if __name__ == '__main__':
     main(prog_name='asd')

@@ -18,24 +18,25 @@ class Saver:
                         "color_image": ColorImage, "feelings": Feelings}
 
     def save(self, parser_name, data):
+
         user = self.session.query(User).filter(User.user_id == data['user']['user_id']).first()
         if not user:
             user = User(**data['user'])
+
         snapshot_id = f"{data['user']['user_id']}_{str(data['timestamp'])}"
         snapshot = Snapshot(snapshot_id=snapshot_id,
                             timestamp=data['timestamp'],
                             parser_name=parser_name, user=user)
         row_obj = self.mapping[parser_name]
         row = self.session.query(row_obj).filter(row_obj.snapshot_id == snapshot_id).first()
-        if row:
-            return
-
-
-        row = row_obj(snapshot=snapshot, **data['result'])
-
-        self.session.add(snapshot)
-        self.session.add(row)
-        self.session.commit()
+        if not row:
+            row = row_obj(snapshot=snapshot, **data['result'])
+            self.session.add(user)
+            # self.session.add(entry)
+            self.session.add(snapshot)
+            self.session.add(row)
+            self.session.commit()
+            print(data)
 
 
 @click.group()
@@ -48,10 +49,12 @@ def main(quiet=False, traceback=False):
 import time
 @main.command('run-saver')
 @click.argument('pika_url')
-@click.argument('database_url', default='sqlite:///asd_db.sqlite')
+@click.argument('database_url', default='postgresql://postgresql@localhost/asd.db')
 def run_saver_cli(pika_url, database_url):
-    create_db(database_url)
-    time.sleep(10)
+    # print("hi")
+
+    # time.sleep(10)
+    print("saver ready")
     channel, queue_name = mq.connect2exchange(addr=pika_url, exchange_name='worker')
     saver = Saver(database_url=database_url)
 
@@ -64,7 +67,8 @@ def run_saver_cli(pika_url, database_url):
     channel.start_consuming()
 
 @main.command('save')
-@click.argument('database_url', default='sqlite:///asd_db.sqlite')
+# @click.argument('database_url', default='sqlite:///asd_db.sqlite')
+@click.argument('database_url', default='postgresql://postgresql@localhost/asd.db')
 @click.argument('parser_name')
 @click.argument('data_path')
 def save_cli(database_url, parser_name, data_path):
