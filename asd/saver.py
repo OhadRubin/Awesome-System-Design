@@ -49,7 +49,7 @@ def main(quiet=False, traceback=False):
 import time
 @main.command('run-saver')
 @click.argument('pika_url')
-@click.argument('database_url', default='postgresql://postgresql@localhost/asd.db')
+@click.argument('database_url', default="sqlite:///./data/asd.sqlite")
 def run_saver_cli(pika_url, database_url):
     # print("hi")
 
@@ -68,7 +68,7 @@ def run_saver_cli(pika_url, database_url):
 
 @main.command('save')
 # @click.argument('database_url', default='sqlite:///asd_db.sqlite')
-@click.argument('database_url', default='postgresql://postgresql@localhost/asd.db')
+@click.argument('database_url', default="sqlite:///./data/asd.sqlite")
 @click.argument('parser_name')
 @click.argument('data_path')
 def save_cli(database_url, parser_name, data_path):

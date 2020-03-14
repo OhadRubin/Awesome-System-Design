@@ -87,14 +87,19 @@ def create_db(address):
     Base.metadata.create_all(engine)
 
 @main.command('create-db')
-@click.option('-a', '--address', default='postgresql://admin:admin@localhost:5432/asd.db')
+@click.option('-a', '--address', default="sqlite:///./data/asd.sqlite")
 def create_db_cli(address):
     create_db(address)
 
-# @main.command('delete-db')
-# def delete_db():
-#     sh.rm('asd_db.sqlite')
+@main.command('delete-db')
+def delete_db():
+    sh.rm('./data/asd.sqlite')
 
+@main.command('reset-db')
+@click.option('-a', '--address', default="sqlite:///./data/asd.sqlite")
+def reset_db(address):
+    sh.rm('./data/asd.sqlite')
+    create_db(address)
 
 if __name__ == '__main__':
     main(prog_name='asd')
