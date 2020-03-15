@@ -31,3 +31,4 @@ psycopg2-binary
 pytest
 pytest-cov
 pytest_httpserver
+codecov
