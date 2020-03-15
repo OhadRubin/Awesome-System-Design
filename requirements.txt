@@ -30,3 +30,4 @@ Werkzeug==1.0.0
 psycopg2-binary
 pytest
 pytest-cov
+pytest_httpserver
