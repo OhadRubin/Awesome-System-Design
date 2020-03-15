@@ -1,6 +1,7 @@
 from PIL import Image as PIL
-class ColorImageParser:
 
+
+class ColorImageParser:
     field = 'color_image'
 
     def parse(self, context, snapshot):

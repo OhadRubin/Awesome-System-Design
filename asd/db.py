@@ -18,7 +18,6 @@ class User(Base):
     gender = Column(String)
 
 
-# snapshot_id = the concat of userid_timestamp
 class Snapshot(Base):
     __tablename__ = 'snapshot'
     element_id = Column(Integer, primary_key=True)
@@ -28,7 +27,6 @@ class Snapshot(Base):
     user = relationship("User")
     parser_name = Column(String)
     parser_id = Column(Integer)
-
 
 class Pose(Base):
     __tablename__ = 'pose'
@@ -73,6 +71,9 @@ class Feelings(Base):
     exhaustion = Column(Float)
     happiness = Column(Float)
 
+
+MAPPING = {'pose': Pose, "depth_image": DepthImage,
+                "color_image": ColorImage, "feelings": Feelings}
 
 @click.group()
 @click.option('-q', '--quiet', is_flag=True)

@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import click
 from asd.db import *
-from asd.db import User, Base, Snapshot, ColorImage, DepthImage, Pose, Feelings, create_db
+from asd.db import User, Base, Snapshot, MAPPING
 from asd import mq
 import json
 from datetime import datetime
@@ -14,8 +14,7 @@ class Saver:
 
         DBSession = sessionmaker(bind=engine)
         self.session = DBSession()
-        self.mapping = {'pose': Pose, "depth_image": DepthImage,
-                        "color_image": ColorImage, "feelings": Feelings}
+
 
     def save(self, parser_name, data):
 
@@ -27,12 +26,11 @@ class Saver:
         snapshot = Snapshot(snapshot_id=snapshot_id,
                             timestamp=data['timestamp'],
                             parser_name=parser_name, user=user)
-        row_obj = self.mapping[parser_name]
+        row_obj = MAPPING[parser_name]
         row = self.session.query(row_obj).filter(row_obj.snapshot_id == snapshot_id).first()
         if not row:
             row = row_obj(snapshot=snapshot, **data['result'])
             self.session.add(user)
-            # self.session.add(entry)
             self.session.add(snapshot)
             self.session.add(row)
             self.session.commit()
@@ -51,9 +49,6 @@ import time
 @click.argument('pika_url')
 @click.argument('database_url', default="sqlite:///./data/asd.sqlite")
 def run_saver_cli(pika_url, database_url):
-    # print("hi")
-
-    # time.sleep(10)
     print("saver ready")
     channel, queue_name = mq.connect2exchange(addr=pika_url, exchange_name='worker')
     saver = Saver(database_url=database_url)

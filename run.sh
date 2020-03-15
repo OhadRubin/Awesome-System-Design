@@ -24,3 +24,5 @@ python -m asd.server run-server -h '127.0.0.1' -p 8000
 #python -m asd.db create-db -a "mysql://asd:asd@localhost:3306/asd"
 python -m asd.db create-db -a "sqlite:///./data/asd.sqlite"
 python -m asd.client upload-sample -h 127.0.0.1 --port 8000 ../sample.mind.gz
+
+docker-compose up --build
