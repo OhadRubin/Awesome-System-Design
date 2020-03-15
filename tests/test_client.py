@@ -5,7 +5,7 @@ def test_client():
     from asd.client import upload_sample
     with HTTPServer(host='127.0.0.1', port=8000) as httpserver:
         httpserver.expect_request("/config").respond_with_json({"parsers": ["pose"]})
-        upload_sample(host='127.0.0.1', port=8000, path='asd/tiny.mind.gz')
+        upload_sample(host='127.0.0.1', port=8000, path='scaffolding_files/tiny.mind.gz')
 
 
 

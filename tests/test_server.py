@@ -12,7 +12,7 @@ def test_server():
     server = multiprocessing.Process(target=run_server, kwargs=dict(host='127.0.01', port=8000, publish=print_message))
     server.start()
     time.sleep(2)
-    upload_sample(host='127.0.0.1', port=8000, path='asd/tiny.mind.gz')
+    upload_sample(host='127.0.0.1', port=8000, path='scaffolding_files/tiny.mind.gz')
 
     server.terminate()
 

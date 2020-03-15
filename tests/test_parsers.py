@@ -5,7 +5,7 @@ import subprocess
 @pytest.fixture
 def packet():
     import asd.asd_pb2
-    reader = asd.reader.Reader("asd/tiny.mind.gz")
+    reader = asd.reader.Reader("scaffolding_files/tiny.mind.gz")
 
     el = next(iter(reader))
     user = asd.asd_pb2.User(user_id=reader.user_id,
@@ -37,7 +37,7 @@ def test_run_parser_import_depth_image(packet):
 
 
 def test_run_raw_data():
-    result = subprocess.run("python -m asd.parsers parse pose asd/packet.raw".split(" "), capture_output=True)
+    result = subprocess.run("python -m asd.parsers parse pose scaffolding_files/packet.raw".split(" "), capture_output=True)
     # print(result)
 
 
