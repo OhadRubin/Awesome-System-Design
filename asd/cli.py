@@ -1,33 +1,5 @@
-from flask import Flask, request
-from flask_restful import Resource, Api
-from flask_restful import fields, marshal_with, reqparse, Resource
 import click
-from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func, Float
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-import click
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-import click
-from asd.db import *
-from asd.db import User, Base, Snapshot, ColorImage, DepthImage, Pose, Feelings, create_db, MAPPING
-from sqlalchemy import text
-from asd import mq
-import json
-from datetime import datetime
-import base64
-from PIL import Image
-from io import BytesIO
-from matplotlib.pyplot import imshow
-import numpy as np
-from PIL import Image
-import json
 import requests
-
-
-
 
 @click.group()
 # @click.version_option(asd.version)
@@ -45,6 +17,7 @@ def get_users(host, port):
     res = requests.get(f"http://{host}:{port}/users")
     print(res.json()['res'])
 
+
 @main.command('get-user')
 @click.option('-h', '--host', default='127.0.0.1')
 @click.option('-p', '--port', default="5000")
@@ -52,6 +25,7 @@ def get_users(host, port):
 def get_user(host, port, user_id):
     res = requests.get(f"http://{host}:{port}/users/{user_id}")
     print(res.json()['res'])
+
 
 @main.command('get-snapshots')
 @click.option('-h', '--host', default='127.0.0.1')
@@ -61,6 +35,7 @@ def get_snapshots(host, port, user_id):
     res = requests.get(f"http://{host}:{port}/users/{user_id}/snapshots")
     print(res.json()['res'])
 
+
 @main.command('get-snapshot')
 @click.option('-h', '--host', default='127.0.0.1')
 @click.option('-p', '--port', default="5000")
@@ -69,6 +44,7 @@ def get_snapshots(host, port, user_id):
 def get_snapshot(host, port, user_id, snapshot_id):
     res = requests.get(f"http://{host}:{port}/users/{user_id}/snapshots/{snapshot_id}")
     print(res.json()['res'])
+
 
 @main.command('get-result')
 @click.option('-h', '--host', default='0.0.0.0')
