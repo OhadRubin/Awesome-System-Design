@@ -54,7 +54,7 @@ def upload_sample(path, host, port):
         resp = requests.post(f'{addr}/config', data=packet,
                              headers={'Content-Type': 'application/protobuf',
                                       'Content-Length': str(len(packet))})
-        if i==10:
+        if i==100:
             break
 
 @main.command('upload-sample')

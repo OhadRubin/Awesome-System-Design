@@ -53,6 +53,7 @@ def run_server(host, port, publish):
 
             packet = asd_pb2.Packet.FromString(request.data)
             publish(packet.SerializeToString())
+            #TODO: what goes here?
             return {"form": "hi"}
 
     api.add_resource(Config, '/config')
@@ -69,9 +70,7 @@ import time
 @click.argument('url', default="127.0.0.1")
 # @click.argument('url', default="rabbitmq://127.0.0.1:5672")
 def run_server_cli(host, port, url):
-    # time.sleep(10)
     channel, _ = mq.connect2exchange(addr=url)
-    # print("hi")
     def publish2exchange(packet):
         channel.basic_publish(exchange='packet', routing_key='', body=packet)
 

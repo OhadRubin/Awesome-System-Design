@@ -18,7 +18,7 @@ from asd import mq
 import json
 from datetime import datetime
 import base64
-
+number_of_rows_per_page = 10
 @click.group()
 # @click.version_option(asd.version)
 @click.option('-q', '--quiet', is_flag=True)
@@ -63,6 +63,19 @@ def run_server(host, port, database_url):
 
     api.add_resource(GetUserSnapshotList, '/users/<user_id>/snapshots')
 
+    class GetUserSnapshotList_p(Resource):
+
+        def get(self, user_id, page_number):
+            query = session.query(Snapshot).filter(Snapshot.user_id == int(user_id)).group_by(Snapshot.snapshot_id)
+            # query = query.offset(page_number*number_of_rows_per_page).limit(number_of_rows_per_page)
+            query = query.slice(page_number*number_of_rows_per_page, (page_number*number_of_rows_per_page)+number_of_rows_per_page)
+
+            snapshots = query.all()
+            
+            return {'res': [dict(snapshot_id=snapshot.snapshot_id, timestamp=snapshot.timestamp) for snapshot in snapshots]}
+
+    api.add_resource(GetUserSnapshotList_p, '/users/<user_id>/snapshots_p/<int:page_number>')
+
     class GetUserSnapshot(Resource):
         def get(self, user_id, snapshot_id):
             snapshots = session.query(Snapshot).filter(Snapshot.user_id == int(user_id))\
@@ -74,6 +87,8 @@ def run_server(host, port, database_url):
                 return {'res': res}
             else:
                 return {}
+
+    
 
     api.add_resource(GetUserSnapshot, '/users/<user_id>/snapshots/<snapshot_id>')
 

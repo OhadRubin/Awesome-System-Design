@@ -1,0 +1,40 @@
+
+			
+{% extends "base.html" %}
+{% block content %}
+
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>
+						Current Users:
+					</h3>
+				</div>
+			</div>
+
+{% for user in users %}
+
+		<div class="row">
+		<div class="col-md-2">
+			<img alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded-circle" />
+		</div>
+		<div class="col-md-10">
+
+			<p class="text-left"> <b>{{ user.username }}</b>, {{user.birthday}}, {{user.gender}} </p>
+			<p class="text-left">   </p>
+
+			<p>
+				<a class="btn" href="/users/{{ user.user_id}}">view snapshots »</a>
+			</p>
+		</div>
+	</div>
+{% endfor %}
+
+
+
+			
+							
+
+							
+</div>
+{% endblock %}

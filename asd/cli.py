@@ -53,7 +53,6 @@ def get_snapshot(host, port, user_id, snapshot_id):
 @click.argument("user_id")
 @click.argument("snapshot_id")
 @click.argument("result_name")
-# @click.argument("path")
 def get_result(host, port,save, user_id, snapshot_id, result_name):
     res = requests.get(f"http://{host}:{port}/users/{user_id}/snapshots/{snapshot_id}/{result_name}")
     if save:
