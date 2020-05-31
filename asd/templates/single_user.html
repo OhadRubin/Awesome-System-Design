@@ -17,43 +17,24 @@
 
 		</div>
 	</div>
+<div id="scroller" class="mb-3">
+<template id="post_template">
 
-
-
-
-
-
-{% for snapshot in snapshots %}
-
-<div class="row">
+<div class="row mb-3">
 		<div class="col-md-6">
 			<div class="row">
-						{% if 'pose' in snapshot   %}
-								<div class="col-md-12">
-								<b> Pose </b>: 
-										t_x: {{snapshot.pose.t_x}}, t_y: {{snapshot.pose.t_y}}, t_z: {{snapshot.pose.t_z}}, r_x: {{snapshot.pose.r_x}}, r_y: {{snapshot.pose.r_y}}, r_z: {{snapshot.pose.r_z}}, r_w: {{snapshot.pose.r_w}}
-								</div>
-						{% else %}
-								<div class="col-md-12">
+								<div class="col-md-12" id="pose" >
 								<b> Pose </b>: Not available 
 								</div>
-						{% endif %}
 			</div>
 			<div class="row">
-						{% if 'feelings' in snapshot   %}
-								<div class="col-md-12">
-								<b> Feelings </b>: 
-										hunger: {{snapshot.feelings.hunger}}, thirst: {{snapshot.feelings.thirst}}, exhaustion: {{snapshot.feelings.exhaustion}}, happiness: {{snapshot.feelings.happiness}}
-								</div>
-						{% else %}
-								<div class="col-md-12">
+
+								<div class="col-md-12" id="feelings">
 								<b> Feelings </b>: Not available 
 								</div>
-						{% endif %}
 			</div>
 			<div class="row">
-				<div class="col-md-12">
-				<b> Posted </b>: {{snapshot.timestamp}} seconds ago
+				<div class="col-md-12" id="snapshot_timestamp">
 				</div>
 			</div>
 		</div>
@@ -63,39 +44,128 @@
 					<div class="row">
 
 						
-						{% if 'color_image' in snapshot   %}
-								<div class="col-md-6">
 
-								
-							<img alt="Bootstrap Image Preview" src={{ url_for('static', filename=snapshot.color_image.path) }}  style="width:{{snapshot.color_image.width/10}}px;height:{{snapshot.color_image.height/10}};">
-							
-								</div>
-						{% else %}
 								<div class="col-md-6">
-							<img alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
+							<img id='color_image' alt="color_image" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
 								</div>
-						{% endif %}
 
-						{% if 'depth_image' in snapshot   %}
-								<div class="col-md-6">
 
-								
-							<img alt="Bootstrap Image Preview" src={{ url_for('static', filename=snapshot.depth_image.path) }}  style="width:{{snapshot.depth_image.width}}px;height:{{snapshot.depth_image.height}};">
-							
-								</div>
-						{% else %}
 								<div class="col-md-6">
-							<img alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
+							<img id='depth_image' alt="depth_image" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
 								</div>
-						{% endif %}
 
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-{% endfor %} 
-							
+</template>
 </div>
+
+<div class="d-flex justify-content-center mb-3" id="sentinel">
+<div class="spinner-border" role="status"></div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+// Get references to the dom elements
+var scroller = document.querySelector("#scroller");
+var template = document.querySelector('#post_template');
+var sentinel = document.querySelector('#sentinel');
+
+// Set a counter to count the items loaded
+var counter = 0;
+var user_id = {{user.user_id}};
+// Function to request new items and render to the dom
+function loadItems() {
+
+  // Use fetch to request data and pass the counter value in the QS
+  
+  fetch(`/users/${user_id}/${counter}`).then((response) => {
+
+    // Convert the response data to JSON
+    response.json().then((data) => {
+
+      // If empty JSON, exit the function
+      if (!data.length) {
+
+        // Replace the spinner with "No more posts"
+        sentinel.innerHTML = "No more posts";
+        return;
+      }
+
+      // Iterate over the items in the response
+      for (var i = 0; i < data.length; i++) {
+
+        // Clone the HTML template
+        let template_clone = template.content.cloneNode(true);
+		template_clone.querySelector("#snapshot_timestamp").innerHTML = `<b> Updated: </b>:  ${data[i].timestamp} seconds ago`;
+        // Query & update the template content
+		if('pose' in data[i]){
+			template_clone.querySelector("#pose").innerHTML = `<b> Pose </b>:  t_x: ${data[i].pose.t_x}, t_y: ${data[i].pose.t_y},
+						 t_z: ${data[i].pose.t_z}, r_x: ${data[i].pose.r_x}, r_y: ${data[i].pose.r_y},
+								 r_z: ${data[i].pose.r_z}, r_w: ${data[i].pose.r_w}`;
+			
+		}
+		if('feelings' in data[i]){
+			template_clone.querySelector("#feelings").innerHTML = 
+			`<b> Feelings </b>:  hunger: ${data[i].feelings.hunger}, thirst: ${data[i].feelings.thirst}, 
+			exhaustion: ${data[i].feelings.exhaustion}, happiness: ${data[i].feelings.happiness}`;
+			
+		}
+		if('color_image' in data[i]){
+			template_clone.querySelector("#color_image").src = data[i].color_image.path;
+			var h = data[i].color_image.height/10;
+			var w = data[i].color_image.width/10;
+			template_clone.querySelector("#color_image").style = `width:${w}px;height:${h};`;
+			
+		}
+		if('depth_image' in data[i]){
+			template_clone.querySelector("#depth_image").src =  data[i].depth_image.path;
+			var h = data[i].depth_image.height;
+			var w = data[i].depth_image.width;
+			template_clone.querySelector("#depth_image").style = `width:${w}px;height:${h};`;
+		}
+        scroller.appendChild(template_clone);        
+
+        
+
+      }
+	  counter += 1;
+    })
+  })
+}
+
+// Create a new IntersectionObserver instance
+var intersectionObserver = new IntersectionObserver(entries => {
+
+  // Uncomment below to see the entry.intersectionRatio when
+  // the sentinel comes into view
+
+  // entries.forEach(entry => {
+  //   console.log(entry.intersectionRatio);
+  // })
+
+  // If intersectionRatio is 0, the sentinel is out of view
+  // and we don't need to do anything. Exit the function
+  if (entries[0].intersectionRatio <= 0) {
+    return;
+  }
+
+  // Call the loadItems function
+  loadItems();
+
+});
+
+// Instruct the IntersectionObserver to watch the sentinel
+intersectionObserver.observe(sentinel);
+
+</script>
+
 {% endblock %}
