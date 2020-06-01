@@ -1,9 +1,9 @@
 import types
 import pathlib
 from os.path import dirname, isfile, join
-import asd.asd_pb2
+import asd.utils.asd_pb2 as asd_pb2
 import os
-from asd import mq
+from asd.utils import mq
 import glob
 import json
 
@@ -54,7 +54,7 @@ class Context:
 def run_parser(parser_name, packet):
     parse_method = parser_list[parser_name]
 
-    packet = asd.asd_pb2.Packet.FromString(packet)
+    packet = asd_pb2.Packet.FromString(packet)
     context = Context(user_id=packet.user.user_id, timestamp=packet.snapshot.datetime)
     res = parse_method(context=context, snapshot=packet.snapshot)
     user = dict(username=packet.user.username, user_id=packet.user.user_id,

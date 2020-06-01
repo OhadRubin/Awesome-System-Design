@@ -3,7 +3,7 @@ import click
 
 from asd.parsers import run_parser, parse
 import os
-from asd import mq
+from asd.utils import mq
 
 
 
@@ -29,10 +29,12 @@ import time
 @click.argument('url')
 def run_parser_mq(parser_name, url):
     # time.sleep(10)
+    print("hi")
     out_channel, _ = mq.connect2exchange(addr=url, exchange_name="worker")
     in_channel, queue_name = mq.connect2exchange(addr=url, exchange_name='packet')
 
     def parse_f(channel, method, propreties, body):
+        print("parser_name")
         res = run_parser(parser_name, packet=body)
         out_channel.basic_publish(exchange="worker", routing_key='', body=res)
         # print(res)
