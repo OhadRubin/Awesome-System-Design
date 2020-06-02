@@ -1,5 +1,5 @@
 import requests
-from asd.reader import Reader
+from asd.utils.reader import Reader
 from asd.utils import asd_pb2
 import click
 import sh
@@ -31,7 +31,7 @@ def main(quiet=False, traceback=False):
     # log.quiet = quiet
     # log.traceback = traceback
 
-def upload_sample(path, host, port):
+def upload_sample(path, host, port,max_samples,timeout):
     addr = f"http://{host}:{port}"
     reader = Reader(path)
     user_fields = {"user_id": reader.user_id, "username": reader.username,
@@ -55,16 +55,19 @@ def upload_sample(path, host, port):
         resp = requests.post(f'{addr}/config', data=packet,
                              headers={'Content-Type': 'application/protobuf',
                                       'Content-Length': str(len(packet))})
-        # time.sleep(0.001)
-        # if i==10:
-            # break
+        if timeout>0:
+            time.sleep(timeout)
+        if i==max_samples:
+            break
 
 @main.command('upload-sample')
 @click.option('-h', '--host', default='127.0.0.1')
 @click.option('-p', '--port', default=8000)
+@click.option('-m', '--max_samples', default=-1)
+@click.option('-t', '--timeout', default=0)
 @click.argument('path')
-def upload_sample_cli(path, host, port):
-    upload_sample(path, host, port)
+def upload_sample_cli(path, host, port, max_samples,timeout):
+    upload_sample(path, host, port, max_samples,timeout)
 
         #TODO: fail gracefuly
         # break

@@ -4,15 +4,15 @@ import subprocess
 
 @pytest.fixture
 def packet():
-    import asd.asd_pb2
-    reader = asd.reader.Reader("scaffolding_files/tiny.mind.gz")
+    import asd.utils.asd_pb2
+    reader = asd.utils.reader.Reader("scaffolding_files/tiny.mind.gz")
 
     el = next(iter(reader))
-    user = asd.asd_pb2.User(user_id=reader.user_id,
+    user = asd.utils.asd_pb2.User(user_id=reader.user_id,
                             username=reader.username,
                             birthday=reader.birthday,
                             gender=reader.gender)
-    packet = asd.asd_pb2.Packet(snapshot=el, user=user).SerializeToString()
+    packet = asd.utils.asd_pb2.Packet(snapshot=el, user=user).SerializeToString()
     return packet
 
 

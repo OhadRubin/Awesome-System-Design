@@ -8,7 +8,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: ./wait-for-it.sh   rabbitmq:5672 -- python -m asd.server run-server -h '0.0.0.0' -p 8000 rabbitmq
+    command:  ./wait-for-it.sh   rabbitmq:5672 -- python -m asd.server run-server -h '0.0.0.0' -p 8000 rabbitmq
     ports:
     - "8000:8000"
     links:
@@ -21,7 +21,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: ./wait-for-it.sh  rabbitmq:5672 -- python -m asd.parsers run-parser 'pose' rabbitmq
+    command:  ./wait-for-it.sh  rabbitmq:5672 -- python -m asd.parsers run-parser 'pose' rabbitmq
     links:
       - "rabbitmq"
     depends_on:
@@ -32,7 +32,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: ./wait-for-it.sh   rabbitmq:5672 -- python -m asd.parsers run-parser 'feelings' rabbitmq
+    command:  ./wait-for-it.sh   rabbitmq:5672 -- python -m asd.parsers run-parser 'feelings' rabbitmq
     links:
       - "rabbitmq"
     depends_on:
@@ -43,7 +43,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: ./wait-for-it.sh   rabbitmq:5672 -- python -m asd.parsers run-parser 'color_image' rabbitmq
+    command:  ./wait-for-it.sh   rabbitmq:5672 -- python -m asd.parsers run-parser 'color_image' rabbitmq
     links:
       - "rabbitmq"
     depends_on:
@@ -54,7 +54,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: ./wait-for-it.sh  rabbitmq:5672 -- python -m asd.parsers run-parser 'depth_image' rabbitmq
+    command:  ./wait-for-it.sh  rabbitmq:5672 -- python -m asd.parsers run-parser 'depth_image' rabbitmq
     links:
       - "rabbitmq"
     depends_on:
@@ -65,7 +65,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: ./wait-for-it.sh  rabbitmq:5672 -- python -m asd.saver run-saver rabbitmq "sqlite:///./data/asd.sqlite"
+    command:  ./wait-for-it.sh  rabbitmq:5672 -- python -m asd.saver run-saver rabbitmq "sqlite:///./data/asd.sqlite"
     links:
       - "rabbitmq"
     volumes:
@@ -74,10 +74,24 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: python -m asd.api run-server -h "0.0.0.0" -p 5000 -d "sqlite:///./data/asd.sqlite"
+    command:  python -m asd.api run-server -h "0.0.0.0" -p 5000 -d "sqlite:///./data/asd.sqlite"
     ports:
       - "5000:5000"
     links:
       - "rabbitmq"
     volumes:
       - ./data:/data
+  gui:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command:  ./wait-for-it.sh  api:5000 -- python -m asd.gui run-server -H api
+    ports:
+      - "8080:8080"
+    links:
+      - "rabbitmq"
+      - api
+
+    volumes:
+      - ./data:/data
+  

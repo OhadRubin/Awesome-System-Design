@@ -7,6 +7,8 @@ import click
 import sh
 from sqlalchemy.schema import CreateTable
 
+
+# MAPPING = {}
 Base = declarative_base()
 
 
@@ -28,6 +30,8 @@ class Snapshot(Base):
     parser_name = Column(String)
     parser_id = Column(Integer)
 
+
+
 class Pose(Base):
     __tablename__ = 'pose'
     snapshot_id = Column(String, ForeignKey('snapshot.snapshot_id'), primary_key=True)
@@ -40,6 +44,7 @@ class Pose(Base):
     r_y = Column(Float)
     r_z = Column(Float)
     r_w = Column(Float)
+# MAPPING[Pose.__tablename__] = Pose 
 
 
 class DepthImage(Base):
@@ -50,7 +55,7 @@ class DepthImage(Base):
     path = Column(String)
     width = Column(Integer)
     height = Column(Integer)
-
+# MAPPING[DepthImage.__tablename__] = DepthImage 
 
 class ColorImage(Base):
     __tablename__ = 'color_image'
@@ -59,7 +64,7 @@ class ColorImage(Base):
     path = Column(String)
     width = Column(Integer)
     height = Column(Integer)
-
+# MAPPING[DepthImage.__tablename__] = DepthImage 
 
 class Feelings(Base):
     __tablename__ = 'feelings'
@@ -70,7 +75,7 @@ class Feelings(Base):
     thirst = Column(Float)
     exhaustion = Column(Float)
     happiness = Column(Float)
-
+# MAPPING[Feelings.__tablename__] = Feelings 
 
 MAPPING = {'pose': Pose, "depth_image": DepthImage,
                 "color_image": ColorImage, "feelings": Feelings}
