@@ -31,7 +31,7 @@ def main(quiet=False, traceback=False):
     # log.quiet = quiet
     # log.traceback = traceback
 
-def upload_sample(path, host, port,max_samples,timeout):
+def upload_sample(path, host, port,max_sample=-1,timeout=0):
     addr = f"http://{host}:{port}"
     reader = Reader(path)
     user_fields = {"user_id": reader.user_id, "username": reader.username,
