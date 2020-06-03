@@ -105,7 +105,7 @@ function loadItems() {
 
         // Clone the HTML template
         let template_clone = template.content.cloneNode(true);
-		template_clone.querySelector("#snapshot_timestamp").innerHTML = `<b> Updated: </b>:  ${data[i].timestamp} seconds ago`;
+		template_clone.querySelector("#snapshot_timestamp").innerHTML = `<b> Updated: </b>:  ${data[i].timestamp} `;
         // Query & update the template content
 		if('pose' in data[i]){
 			template_clone.querySelector("#pose").innerHTML = `<b> Pose </b>:  t_x: ${data[i].pose.t_x}, t_y: ${data[i].pose.t_y},

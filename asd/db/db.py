@@ -6,7 +6,8 @@ from sqlalchemy.orm import sessionmaker
 import click
 import sh
 from sqlalchemy.schema import CreateTable
-
+from asd.utils.logger import Log
+log = Log(__name__)
 
 # MAPPING = {}
 Base = declarative_base()
@@ -84,7 +85,8 @@ MAPPING = {'pose': Pose, "depth_image": DepthImage,
 @click.option('-q', '--quiet', is_flag=True)
 @click.option('-t', '--traceback', is_flag=True)
 def main(quiet=False, traceback=False):
-    pass
+    log.quiet = quiet
+    log.traceback = traceback
 
 def create_db(address):
     engine = create_engine(address)
@@ -99,7 +101,8 @@ def create_db_cli(address):
 
 @main.command('delete-db')
 def delete_db():
-    sh.rm('./data/asd.sqlite')
+    sh.rm("-rf",'data')
+    sh.mkdir("data")
 
 @main.command('reset-db')
 @click.option('-a', '--address', default="sqlite:///./data/asd.sqlite")

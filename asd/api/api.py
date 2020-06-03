@@ -18,15 +18,22 @@ from asd.utils import mq
 import json
 from datetime import datetime
 import base64
+from asd.utils.logger import Log
+
 number_of_rows_per_page = 10
+
+
+
+log = Log(__name__)
+
 @click.group()
 # @click.version_option(asd.version)
 @click.option('-q', '--quiet', is_flag=True)
 @click.option('-t', '--traceback', is_flag=True)
 def main(quiet=False, traceback=False):
-    pass
-    # log.quiet = quiet
-    # log.traceback = traceback
+    # pass
+    log.quiet = quiet
+    log.traceback = traceback
 
 def dictify(x):
     return {col.name: x.__dict__[col.name] for col in x.__table__.columns}

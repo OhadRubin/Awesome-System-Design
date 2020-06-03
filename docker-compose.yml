@@ -17,6 +17,7 @@ services:
       - "rabbitmq"
     volumes:
       - ./data:/data
+      - ./asd:/asd
   pose:
     build:
       context: .
@@ -28,6 +29,7 @@ services:
       - "rabbitmq"
     volumes:
       - ./data:/data
+      - ./asd:/asd
   feelings:
     build:
       context: .
@@ -39,6 +41,7 @@ services:
       - "rabbitmq"
     volumes:
       - ./data:/data
+      - ./asd:/asd
   color_image:
     build:
       context: .
@@ -50,6 +53,7 @@ services:
       - "rabbitmq"
     volumes:
       - ./data:/data
+      - ./asd:/asd
   depth_image:
     build:
       context: .
@@ -61,6 +65,7 @@ services:
       - "rabbitmq"
     volumes:
       - ./data:/data
+      - ./asd:/asd
   saver:
     build:
       context: .
@@ -70,6 +75,7 @@ services:
       - "rabbitmq"
     volumes:
       - ./data:/data
+      - ./asd:/asd
   api:
     build:
       context: .
@@ -81,6 +87,7 @@ services:
       - "rabbitmq"
     volumes:
       - ./data:/data
+      - ./asd:/asd
   gui:
     build:
       context: .
@@ -91,7 +98,7 @@ services:
     links:
       - "rabbitmq"
       - api
-
     volumes:
       - ./data:/data
+      - ./asd:/asd
   

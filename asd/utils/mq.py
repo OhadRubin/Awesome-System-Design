@@ -2,7 +2,7 @@ import pika
 
 def connect2exchange(addr='localhost', exchange_name='packet'):
     # print("hi")
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=addr))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=addr,heartbeat=0,))
     # , heartbeat = 600,
     # blocked_connection_timeout = 300
     channel = connection.channel()

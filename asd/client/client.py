@@ -6,20 +6,10 @@ import sh
 import os
 import time
 
-# class Log:
-#     def __init__(self):
-#         self.quiet = False
-#         self.traceback = False
-#
-#     def __call__(self, message):
-#         if self.quiet:
-#             return
-#         if self.traceback and sys.exc_info():  # there's an active exception
-#             message += os.linesep + traceback.format_exc().strip()
-#         click.echo(message)
-#
-#
-# log = Log()
+from asd.utils.logger import Log
+
+
+log = Log(__name__)
 
 
 @click.group()
@@ -27,9 +17,8 @@ import time
 @click.option('-q', '--quiet', is_flag=True)
 @click.option('-t', '--traceback', is_flag=True)
 def main(quiet=False, traceback=False):
-    pass
-    # log.quiet = quiet
-    # log.traceback = traceback
+    log.quiet = quiet
+    log.traceback = traceback
 
 def upload_sample(path, host, port,max_samples=-1,timeout=0):
     addr = f"http://{host}:{port}"
@@ -55,8 +44,8 @@ def upload_sample(path, host, port,max_samples=-1,timeout=0):
         resp = requests.post(f'{addr}/config', data=packet,
                              headers={'Content-Type': 'application/protobuf',
                                       'Content-Length': str(len(packet))})
-        if timeout>0:
-            time.sleep(timeout)
+        # if timeout>0:
+        time.sleep(0.05)
         if i==max_samples:
             break
 

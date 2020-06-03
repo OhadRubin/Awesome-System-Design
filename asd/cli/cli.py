@@ -1,14 +1,20 @@
 import click
 import requests
+import sys
+import traceback
+from asd.utils.logger import Log
+
+
+log = Log(__name__)
 
 @click.group()
 # @click.version_option(asd.version)
 @click.option('-q', '--quiet', is_flag=True)
 @click.option('-t', '--traceback', is_flag=True)
 def main(quiet=False, traceback=False):
-    pass
-    # log.quiet = quiet
-    # log.traceback = traceback
+    # pass
+    log.quiet = quiet
+    log.traceback = traceback
 
 @main.command('get-users')
 @click.option('-h', '--host', default='127.0.0.1')

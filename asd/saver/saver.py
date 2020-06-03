@@ -1,11 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import click
-from asd.db import *
-# from asd.db import User, Base, Snapshot, MAPPING
+from asd.db import User, Base, Snapshot, MAPPING
 from asd.utils import mq
 import json
 from datetime import datetime
+from asd.utils.logger import Log
+
+log = Log(__name__)
 
 class Saver:
     def __init__(self, database_url):
@@ -42,7 +44,8 @@ class Saver:
 @click.option('-q', '--quiet', is_flag=True)
 @click.option('-t', '--traceback', is_flag=True)
 def main(quiet=False, traceback=False):
-    pass
+    log.quiet = quiet
+    log.traceback = traceback
 
 import time
 @main.command('run-saver')
@@ -50,16 +53,24 @@ import time
 @click.argument('database_url', default="sqlite:///./data/asd.sqlite")
 def run_saver_cli(pika_url, database_url):
     print("saver ready")
-    channel, queue_name = mq.connect2exchange(addr=pika_url, exchange_name='worker')
-    saver = Saver(database_url=database_url)
 
-    def handle_msg(channel, method, propreties, body):
-        body = json.loads(body)
-        saver.save(parser_name=body['parser_name'], data=body['data'])
+    while(True):
+        try:
+            channel, queue_name = mq.connect2exchange(addr=pika_url, exchange_name='worker')
+            saver = Saver(database_url=database_url)
 
-    channel.basic_consume(
-        queue=queue_name, on_message_callback=handle_msg, auto_ack=True)
-    channel.start_consuming()
+            def handle_msg(channel, method, propreties, body):
+                body = json.loads(body)
+                saver.save(parser_name=body['parser_name'], data=body['data'])
+
+            channel.basic_consume(
+                queue=queue_name, on_message_callback=handle_msg, auto_ack=True)
+            channel.start_consuming()
+        except:
+            continue
+
+
+
 
 @main.command('save')
 # @click.argument('database_url', default='sqlite:///asd_db.sqlite')
