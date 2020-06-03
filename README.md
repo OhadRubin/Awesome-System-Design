@@ -21,10 +21,9 @@
   - [Notes](#notes-3)
 - [CLI module](#cli-module)
   - [Usage](#usage-6)
-  - [Notes](#notes-4)
 - [GUI module](#gui-module)
   - [Usage](#usage-7)
-  - [Notes](#notes-5)
+  - [Notes](#notes-4)
 
 
 ## Installation
@@ -123,13 +122,13 @@
     $ python -m cortex.parsers parse 'pose' 'snapshot.raw' > 'pose.result'
     ```
     - This interace accepts a parser name and a path to some raw data, as consumed from the  message queue, and prints the result, as published to the message queue (optionally redirecting it to a file.
-
+- Note that we only accept .raw files,
 
 ### How to add a new parser
 The parser file must contain either of the following:
 1. A class with a method `parse` with the signature (self, context, snapshot)
 2.  A method that begins with `parse_`, for example `parse_feelings` and has the signature (context, snapshot). 
-    - For example: [feelings.py ](parsers/feelings.py)
+    - For example: [feelings.py ](asd/parsers/feelings.py)
     
 
     Either way, it should return a dict, the keys for the dict will be the values that will be saved via the saver.
@@ -187,13 +186,39 @@ The parser file must contain either of the following:
 # CLI module 
 
 ## Usage
-
-## Notes
+```sh
+$ python -m asd.cli get-users
+…
+$ python -m asd.cli get-user 1
+…
+$ python -m asd.cli get-snapshots 1
+…
+$ python -m asd.cli get-snapshot 1 2
+…
+$ python -m asd.cli get-result 1 2 'pose'
+```
 
 # GUI module 
 
 ## Usage
-
+- Using python:
+    ```python
+    >>> from asd.gui import run_server
+    >>> run_server(
+    ...     host = '127.0.0.1',
+    ...     port = 8080,
+    ...     api_host = '127.0.0.1',
+    ...     api_port = 5000,
+    ... )
+    ```
+- Using the cli:
+    ```sh
+    $ python -m asd.gui run-server \
+        -h/--host '127.0.0.1'       \
+        -p/--port 8080              \
+        -H/--api-host '127.0.0.1'   \
+        -P/--api-port 5000
+    ```
 ## Notes
 - We used flask
-- For the gui, we implemented a infinite scrolling view
+- For the gui, we implemented a infinite scrolling view.

@@ -10,7 +10,7 @@ from asd.utils.logger import Log
 
 
 
-log = Log(__name__)
+log = Log()
 
 @click.group()
 # @click.version_option(asd.version)

@@ -98,6 +98,7 @@ services:
     links:
       - "rabbitmq"
       - api
+
     volumes:
       - ./data:/data
       - ./asd:/asd

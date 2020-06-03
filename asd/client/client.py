@@ -9,7 +9,7 @@ import time
 from asd.utils.logger import Log
 
 
-log = Log(__name__)
+log = Log()
 
 
 @click.group()
@@ -19,6 +19,7 @@ log = Log(__name__)
 def main(quiet=False, traceback=False):
     log.quiet = quiet
     log.traceback = traceback
+    log.setName("client")
 
 def upload_sample(path, host, port,max_samples=-1,timeout=0):
     addr = f"http://{host}:{port}"

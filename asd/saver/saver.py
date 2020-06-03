@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 from asd.utils.logger import Log
 
-log = Log(__name__)
+log = Log()
 
 class Saver:
     def __init__(self, database_url):
@@ -36,7 +36,8 @@ class Saver:
             self.session.add(snapshot)
             self.session.add(row)
             self.session.commit()
-            print(data)
+            log(data)
+            # print(data)
 
 
 @click.group()
@@ -46,6 +47,7 @@ class Saver:
 def main(quiet=False, traceback=False):
     log.quiet = quiet
     log.traceback = traceback
+    log.setName("saver")
 
 import time
 @main.command('run-saver')

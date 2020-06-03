@@ -8,7 +8,7 @@ from asd.utils.logger import Log
 
 
 
-log = Log(__name__)
+log = Log()
 
 @click.group()
 # @click.version_option(asd.version)
@@ -18,6 +18,7 @@ def main(quiet=False, traceback=False):
     # pass
     log.quiet = quiet
     log.traceback = traceback
+    
 
 
 # TODO: add to documentation that we only accept .raw files,
@@ -33,8 +34,8 @@ import time
 @click.argument('parser_name')
 @click.argument('url')
 def run_parser_mq(parser_name, url):
-    # time.sleep(10)
-    # print("hi")
+    time.sleep(2)
+    log.setName(parser_name)
     while(True):
         try:
             out_channel, _ = mq.connect2exchange(addr=url, exchange_name="worker")
@@ -44,8 +45,6 @@ def run_parser_mq(parser_name, url):
                 # print("parser_name")
                 res = run_parser(parser_name, packet=body)
                 out_channel.basic_publish(exchange="worker", routing_key='', body=res)
-                # print(res)
-                #TODO add log with: print(res)
                 return res
 
             in_channel.basic_consume(

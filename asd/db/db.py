@@ -7,7 +7,7 @@ import click
 import sh
 from sqlalchemy.schema import CreateTable
 from asd.utils.logger import Log
-log = Log(__name__)
+log = Log()
 
 # MAPPING = {}
 Base = declarative_base()

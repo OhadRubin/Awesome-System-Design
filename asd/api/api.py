@@ -24,7 +24,7 @@ number_of_rows_per_page = 10
 
 
 
-log = Log(__name__)
+log = Log()
 
 @click.group()
 # @click.version_option(asd.version)
@@ -34,6 +34,7 @@ def main(quiet=False, traceback=False):
     # pass
     log.quiet = quiet
     log.traceback = traceback
+    log.setName("api")
 
 def dictify(x):
     return {col.name: x.__dict__[col.name] for col in x.__table__.columns}
