@@ -49,11 +49,6 @@ def run_server(host, port, api_host,api_port):
     _api_port = api_port
     app = Flask(__name__)
 
-    # @app.route('/uploads/<path:filename>')
-    # def download_file(filename):
-        # return send_from_directory("..data",
-                                # filename, as_attachment=True)
-
 
     @app.route('/users/<int:user_id>/<int:page_number>',methods = ['GET'])
     def single_user_p(user_id,page_number=0):
@@ -83,7 +78,7 @@ def run_server(host, port, api_host,api_port):
 
     @app.route('/users/<int:user_id>',methods = ['GET'])
     def single_user(user_id):
-        user = requests.get(f"http://{_api_host}:{_api_port}/users/{user_id}").json()['res']
+        user = requests.get(f"http://{_api_host}:{_api_port}/users/{user_id}").json()['res'] 
         # time.gmtime(699746400)
         # datetime.date.fromtimestamp(699746400)
         
@@ -97,10 +92,14 @@ def run_server(host, port, api_host,api_port):
 
     @app.route('/',methods = ['GET'])
     def users():
-        users = requests.get(f"http://{_api_host}:{_api_port}/users").json()['res']
-        for user in users:
-            user['birthday'] = str(datetime.date.today().year-datetime.date.fromtimestamp(int(user['birthday'])).year)
-            user['gender'] = 'Male' if user['gender']=='0' else 'Female'
+        users = requests.get(f"http://{_api_host}:{_api_port}/users").json()
+        if 'res' in users:
+            users = users['res']
+            for user in users:
+                user['birthday'] = str(datetime.date.today().year-datetime.date.fromtimestamp(int(user['birthday'])).year)
+                user['gender'] = 'Male' if user['gender']=='0' else 'Female'
+        else:
+            users = []
         return render_template('all_users.html',users=users)
     app.run(host=host,port=port,debug=True)
 

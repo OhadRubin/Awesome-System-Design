@@ -54,7 +54,7 @@ import time
 @click.argument('pika_url')
 @click.argument('database_url', default="sqlite:///./data/asd.sqlite")
 def run_saver_cli(pika_url, database_url):
-    print("saver ready")
+    log("saver ready")
 
     while(True):
         try:
